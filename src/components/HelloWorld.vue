@@ -1,46 +1,75 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+    <button v-on:click="get_data">GET</button>
+		<p></p>
+		<v-row v-for="item of items" :key="item">
+			<!-- <v-col :class={{ item }}></v-col> -->
+			<div :class="item"></div>
+		</v-row>
+		<!-- <div :class="api1.text"></div> -->
+	</div>
 </template>
 
 <script>
+import axios from 'axios'
+
+var url = 'http://localhost:4321/app'
+
 export default {
   name: 'HelloWorld',
   props: {
-    msg: String
-  }
+    msg: String,
+    api1: String,
+  },
+	data: function () {
+		return {
+			items: [
+				'red',
+				'red',
+				'red',
+				'red',
+				'red',
+				'red',
+				'red',
+				'red',
+				'red',
+				'red'
+			]
+		}
+  },
+	methods: {
+		get_data: function () {
+			this.items.forEach((value, i) => {
+				console.log(i, value)
+				//this.items.splice(i, 1, 'blue')
+				axios
+					.get(url)
+					.then(response => {
+						this.items.splice(i, 1, response.data.text)
+				})
+			})
+/*
+				axios
+					.get(url)
+					.then(response => {
+						this.items[i] = response.data
+						this.items.splice();
+					})
+			}
+*/
+		}
+	},
+  mounted () {
+		this.api1 = "{'text':''}"
+	}
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.wrapper{
+    display: flex;
+}
 h3 {
   margin: 40px 0 0;
 }
@@ -54,5 +83,32 @@ li {
 }
 a {
   color: #42b983;
+}
+.circle{
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+	background: blue;
+}
+.blue {
+  width: 50px;
+  height: 50px;
+	display: inline-block;
+	margin: 5px;
+	background: blue;
+}
+.green {
+  width: 50px;
+  height: 50px;
+	display: inline-block;
+	margin: 5px;
+  background: green;
+}
+.red {
+  width: 50px;
+  height: 50px;
+	display: inline-block;
+	margin: 5px;
+  background: red;
 }
 </style>
